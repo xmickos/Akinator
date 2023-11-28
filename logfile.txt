@@ -1,28 +1,22 @@
-[OpInsertSort, 85]
-[OpNew, 10]
-Created node with val = 10
-[OpInsertSort, 85]
+[OpInsertSort, 81]
 [OpNew, 10]
 Created node with val = 5
-[OpInsertSort, 85]
+[OpInsertSort, 81]
 [OpNew, 10]
 Created node with val = 15
-[OpInsertSort, 85]
+[OpInsertSort, 81]
 [OpNew, 10]
 Created node with val = 12
-[OpInsertSort, 85]
+[OpInsertSort, 81]
 [OpNew, 10]
 Created node with val = 20
-[OpInsertSort, 85]
+[OpInsertSort, 81]
 [OpNew, 10]
 Created node with val = 11
 	data: 10
 	left:	
-		data: 10
+		data: 5
 		left:	
-			data: 5
-			left:	
-			right:	
 		right:	
 	right:	
 		data: 15
@@ -37,3 +31,4 @@ Created node with val = 11
 			data: 20
 			left:	
 			right:	
+(10(5nilnil)(15(12(11nilnil)nil)(20nilnil)))

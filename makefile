@@ -1,5 +1,5 @@
 all:
-	clang++ -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Wc++14-compat -Wmissing-declarations							\
+	g++ -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Wc++14-compat -Wmissing-declarations								\
 	-Wcast-qual -Wchar-subscripts -Wconversion -Wctor-dtor-privacy -Wempty-body									                    \
 	-Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat=2 -Winline -Wnon-virtual-dtor						                \
 	-Wopenmp -Woverloaded-virtual -Wpacked -Wpointer-arith -Winit-self -Wredundant-decls -Wshadow -Wsign-conversion				    \
@@ -10,3 +10,6 @@ all:
 	-fno-omit-frame-pointer -Wlarger-than=8192 -Wframe-larger-than=8192 -fPIE													    \
 	-fsanitize=address,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,				            \
 	akinator.cpp akinator_funcs.cpp -o akinator
+	./akinator
+dot:
+	dot my_dotcode.dot -Tpng -O
