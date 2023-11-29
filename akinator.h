@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string.h>
 
 typedef int Elem_t;
 
@@ -51,7 +52,7 @@ struct Root{
     Node* tree_root = nullptr;
 };
 
-Node* OpNew();
+Node* OpNew(Elem_t value, FILE* logfile);
 
 int RootCtor(Root* root, FILE* logfile);
 
@@ -68,3 +69,5 @@ void IndentMe(size_t count, FILE* logfile);
 void PrintNode(const Node* node, FILE* logfile);
 
 int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile);
+
+Node* PartialTreeRead(char* buff, int* pos, FILE* logfile);

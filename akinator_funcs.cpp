@@ -1,5 +1,6 @@
 #include "akinator.h"
 
+
 Node* OpNew(Elem_t value, FILE* logfile){
 
     // Можно объявлять Node node = {}; прямо здесь и возвращать через return ?
@@ -220,13 +221,123 @@ int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile){
     VERIFICATION(backupfile == nullptr, "Input backupfile is nullptr!", logfile, -1);
     VERIFICATION(init_node == nullptr, "Input init_node is nullptr!", logfile, -1);
 
-    struct stat buff;
+    struct stat filestat;
     size_t filesize = 0;
+    int pos = 0;
 
-    stat("./tree_backup.txt", &buff);
-    filesize = buff.st_size;
+    stat("./tree_backup.txt", &filestat);
+    filesize = filestat.st_size;
 
-    printf("size = %lld\n", buff.st_size);
+    char* buff = (char*)calloc(filesize, sizeof(char));
+    VERIFICATION(buff == nullptr, "Bad calloc!", logfile, -1);
+
+    if(fread(buff, sizeof(char), filesize - 1, backupfile) < 0){
+        fprintf(logfile, "Bad fileread!\n\n");
+        return -1;
+    }
+    buff[filesize - 1] = '\0';
+
+    printf("size = %lld\n", filestat.st_size);
+    printf("buff: %s\n", buff);
+
+    init_node->right = PartialTreeRead(buff, &pos, logfile);
+
+    printf("Bye:)\n");
 
     return 0;
 }
+
+
+Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
+    VERIFICATION_LOGFILE(logfile);
+    VERIFICATION(pos == nullptr, "Lost pos address!", logfile, nullptr);
+
+    int node_val = 0, offset = 0;
+    char command_buff[DEFAULT_SIZE] = {};
+
+    printf("Another level...\n");
+    // if(buff == nullptr) return node;
+
+    if(buff[*pos] != '('){
+        printf("Bad syntax. Remaining buff: %s\n", buff + *pos);
+        return nullptr;
+    }else{
+        (*pos)++;
+        printf("Increasing buff...\nbuff: %s\n", buff + *pos);
+    }
+
+    Node* node = OpNew(0, logfile);
+
+    if(sscanf(buff + *pos, "%d%n", &node_val, &offset) != 0){
+        printf("Value! :3 %d!\n", node_val);
+        node->data = node_val;
+        *pos += offset;
+    }else{
+        printf("Cant find number after \'(\'\nExiting...\nremaining buff: %s", buff + *pos);
+        return nullptr;
+    }
+
+    if(buff[*pos] == '('){
+        printf("Going deeper left...\n");
+        node->left = PartialTreeRead(buff, pos, logfile);
+    }else{
+
+        sscanf(buff + *pos, "%3s", command_buff);
+        if(!strcmp(command_buff, "nil")){
+            printf("Found nil!\n");
+            node->left = nullptr;
+            *pos += 3;
+        }else{
+            if(buff[*pos] == '('){
+            node->left = PartialTreeRead(buff, pos, logfile);
+            }
+        }
+
+    }
+
+
+    sscanf(buff + *pos, "%3s", command_buff);
+    if(!strcmp(command_buff, "nil")){
+        node->right = nullptr;
+        *pos += 3;
+        printf("Found nil!\nleft buff: %s\n\n", buff + *pos);
+    }else{
+        if(buff[*pos] == '('){
+        node->right = PartialTreeRead(buff, pos, logfile);
+        }
+    }
+
+    if(buff[*pos] == ')'){
+        (*pos)++;
+        printf("Foud closing bracket!\nleft buff: %s\n", buff + *pos);
+        return node;
+    }
+
+//
+//     if(sscanf(buff, "%d%n", &node_val, &offset) == 0){
+//         sscanf(buff, "%3s%n", command_buff, &offset);
+//         if(!strcmp(command_buff, "nil")){
+//             node->left = nullptr;
+//             buff += offset;
+//             printf("Found nil!\nleft buff: %s\n\n", buff);
+//         }
+//
+//         if(*buff == '('){
+//             buff++;
+//             PartialTreeRead(buff, logfile);
+//             printf("Going deeper...\n");
+//             // ???
+//         }else{
+//             printf("Bad syntax. Remaining buff: %s\n", buff);
+//             return nullptr;
+//         }
+//
+//     }else{
+//         printf("Value! :3 %d!\n", node_val);
+//         node->data = node_val;
+//         buff += offset;
+//     }
+
+    return nullptr;
+}
+

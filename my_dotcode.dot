@@ -20,38 +20,31 @@ edge [ ];
 ];
 
 "0/1"[
-	label = "<f0> data: 5| {<f1> Left| <f2> Right} | <f3> 0/1"
+	label = "<f0> data: 0| {<f1> Left| <f2> Right} | <f3> 0/1"
 	shape = "record"
 ];
 
 "0/0":f1 -> "0/1":f0
 
 "128/1"[
-	label = "<f0> data: 15| {<f1> Left| <f2> Right} | <f3> 128/1"
+	label = "<f0> data: 0| {<f1> Left| <f2> Right} | <f3> 128/1"
 	shape = "record"
 ];
 
 "0/0":f2 -> "128/1":f0
 
-"128/2"[
-	label = "<f0> data: 12| {<f1> Left| <f2> Right} | <f3> 128/2"
+"0/2"[
+	label = "<f0> data: 11| {<f1> Left| <f2> Right} | <f3> 0/2"
 	shape = "record"
 ];
 
-"128/1":f1 -> "128/2":f0
+"0/1":f1 -> "0/2":f0
 
 "192/2"[
-	label = "<f0> data: 20| {<f1> Left| <f2> Right} | <f3> 192/2"
+	label = "<f0> data: 14| {<f1> Left| <f2> Right} | <f3> 192/2"
 	shape = "record"
 ];
 
 "128/1":f2 -> "192/2":f0
-
-"128/3"[
-	label = "<f0> data: 11| {<f1> Left| <f2> Right} | <f3> 128/3"
-	shape = "record"
-];
-
-"128/2":f1 -> "128/3":f0
 
 }

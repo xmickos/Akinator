@@ -1,34 +1,57 @@
-[OpInsertSort, 81]
-[OpNew, 10]
-Created node with val = 5
-[OpInsertSort, 81]
-[OpNew, 10]
-Created node with val = 15
-[OpInsertSort, 81]
-[OpNew, 10]
-Created node with val = 12
-[OpInsertSort, 81]
-[OpNew, 10]
-Created node with val = 20
-[OpInsertSort, 81]
-[OpNew, 10]
-Created node with val = 11
 	data: 10
 	left:	
-		data: 5
+		data: 0
 		left:	
+			data: 11
+			left:	
+			right:	
 		right:	
 	right:	
-		data: 15
+		data: 0
 		left:	
-			data: 12
+		right:	
+			data: 14
 			left:	
-				data: 11
-				left:	
-				right:	
+			right:	
+(10(0(11nilnil)nil)(0nil(14nilnil)))[OpNew, 11]
+Created node with val = 0
+[OpNew, 11]
+Created node with val = 0
+[OpNew, 11]
+Created node with val = 0
+[OpNew, 11]
+Created node with val = 0
+[OpNew, 11]
+Created node with val = 0
+
+a
+	data: 10
+	left:	
+		data: 0
+		left:	
+			data: 11
+			left:	
 			right:	
 		right:	
-			data: 20
+			data: 10
+			left:	
+				data: 0
+				left:	
+					data: 11
+					left:	
+					right:	
+				right:	
+			right:	
+				data: 0
+				left:	
+				right:	
+					data: 14
+					left:	
+					right:	
+	right:	
+		data: 0
+		left:	
+		right:	
+			data: 14
 			left:	
 			right:	
-(10(5nilnil)(15(12(11nilnil)nil)(20nilnil)))
