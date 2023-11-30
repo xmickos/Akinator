@@ -8,7 +8,7 @@ Node* OpNew(Elem_t value, FILE* logfile){
     // уже затёртый адрес, а копия всей структуры.
 
     VERIFICATION_LOGFILE(logfile, nullptr);
-    ECHO(logfile);
+    // ECHO(logfile);
 
     Node* node = (Node*)calloc(1, sizeof(Node));
     node->data = (char*)calloc(DEFAULT_SIZE, sizeof(char));
@@ -70,7 +70,8 @@ int RootCtor(Root* root, FILE* logfile){
     }
 
     root->tree_root->data  = (char*)calloc(4 * DEFAULT_SIZE, sizeof(char));
-    strcpy(root->tree_root->data, "Unauthorized access to this device is prohibited!");
+    // strcpy(root->tree_root->data, "Unauthorized access to this device is prohibited!");
+    strcpy(root->tree_root->data, "Неизвестно кто");
     root->tree_root->left  = nullptr;
     root->tree_root->right = nullptr;
 
@@ -107,21 +108,22 @@ int OpInsertSort(Root* root, Elem_t value, FILE* logfile){
 }
 */
 
-int TreePartialTextDump(Node* node, size_t indent, FILE* logfile){
+int TreePartialTextDump(Node* node, size_t indent, FILE* dstfile, FILE* logfile){
     VERIFICATION_LOGFILE(logfile, -1);
+    VERIFICATION_LOGFILE(dstfile, -1);
 
     if(node == nullptr) return 0;
 
-    IndentMe(indent + 1u, logfile);
-    fprintf(logfile, "data: %s\n", node->data);
+    IndentMe(indent + 1u, dstfile);
+    fprintf(dstfile, "data: %s\n", node->data);
 
-    IndentMe(indent + 1u, logfile);
-    fprintf(logfile, "left:\t\n");
-    TreePartialTextDump(node->left, indent + 1, logfile);
+    IndentMe(indent + 1u, dstfile);
+    fprintf(dstfile, "left:\t\n");
+    TreePartialTextDump(node->left, indent + 1, dstfile, logfile);
 
-    IndentMe(indent + 1u, logfile);
-    fprintf(logfile, "right:\t\n");
-    TreePartialTextDump(node->right, indent + 1, logfile);
+    IndentMe(indent + 1u, dstfile);
+    fprintf(dstfile, "right:\t\n");
+    TreePartialTextDump(node->right, indent + 1, dstfile, logfile);
 
     return 0;
 }
@@ -228,24 +230,27 @@ int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile){
     size_t filesize = 0;
     int pos = 0;
 
-    stat("./tree_backup.txt", &filestat);
+    stat("akinator_database.txt", &filestat);
     filesize = filestat.st_size;
 
-    char* buff = (char*)calloc(filesize, sizeof(char));
+    char* buff = (char*)calloc(filesize + 1, sizeof(char));
     VERIFICATION(buff == nullptr, "Bad calloc!", logfile, -1);
 
-    if(fread(buff, sizeof(char), filesize - 1, backupfile) < 0){
+    if(fread(buff, sizeof(char), filesize, backupfile) < 0){
         fprintf(logfile, "Bad fileread!\n\n");
         return -1;
     }
-    buff[filesize - 1] = '\0';
 
-    printf("size = %lld\n", filestat.st_size);
+    if(filesize > 0){
+        buff[filesize] = '\0';
+    }
+
+    // printf("size = %lld\n", filestat.st_size);
     printf("buff: %s\n", buff);
 
     init_node->right = PartialTreeRead(buff, &pos, logfile);
 
-    printf("Bye:)\n");
+    printf("output: %p,\nBye:)\n", init_node->right);
 
     return 0;
 }
@@ -258,14 +263,14 @@ Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
     int offset = 0;
     char command_buff[DEFAULT_SIZE] = {}, node_val[DEFAULT_SIZE] = {};
 
-    printf("Another level...\n");
+    // printf("Another level...\n");
 
     if(buff[*pos] != '('){
         printf("Bad syntax. Remaining buff: %s\n", buff + *pos);
         return nullptr;
     }else{
         (*pos)++;
-        printf("Increasing pos...\nbuff: %s\n", buff + *pos);
+        // printf("Increasing pos...\nbuff: %s\n", buff + *pos);
     }
 
     Node* node = OpNew("\0", logfile);
@@ -277,23 +282,23 @@ Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
 
     node_val[offset + 1] = '\0';
 
-    printf("Value! :3 \"%s\"!\n", node_val);
+    // printf("Value! :3 \"%s\"!\n", node_val);
     strcpy(node->data, node_val);
     *pos += 2; // +2 for remaining ' " ' and last symbol in prev string.
-    printf("New pos is %d\n", *pos);
+    // printf("New pos is %d\n", *pos);
 
     if(buff[*pos] == '('){
-        printf("Going deeper left...\n");
+        // printf("Going deeper left...\n");
         node->left = PartialTreeRead(buff, pos, logfile);
     }else{
 
 
-// ("Unauthorized access to this device is prohibited!"("Hello!"("sample text :/"nilnil)nil)("Hola!"nil("Privet!"nilnil)))
+     // ("Unauthorized access to this device is prohibited!"("Hello!"("sample text :/"nilnil)nil)("Hola!"nil("Privet!"nilnil)))
 
 
         sscanf(buff + *pos, "%3s", command_buff);
         if(!strcmp(command_buff, "nil")){
-            printf("Found nil!\n");
+            // printf("Found nil!\n");
             node->left = nullptr;
             *pos += 3;
         }else{
@@ -308,7 +313,7 @@ Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
     if(!strcmp(command_buff, "nil")){
         node->right = nullptr;
         *pos += 3;
-        printf("Found nil!\nleft buff: %s\n\n", buff + *pos);
+        // printf("Found nil!\nleft buff: %s\n\n", buff + *pos);
     }else{
         if(buff[*pos] == '('){
         node->right = PartialTreeRead(buff, pos, logfile);
@@ -317,10 +322,63 @@ Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
 
     if(buff[*pos] == ')'){
         (*pos)++;
-        printf("Foud closing bracket!\nleft buff: %s\n", buff + *pos);
+        // printf("Foud closing bracket!\nleft buff: %s\n", buff + *pos);
         return node;
     }
 
+    printf("\nWell...\n");
     return nullptr;
 }
 
+int AkinatorGuessing(Root* root, Node* node, FILE* logfile){
+
+    VERIFICATION_LOGFILE(logfile, -1);
+    VERIFICATION(node == nullptr, "Input node is nullptr!", logfile, -1);
+    VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1);
+
+    char ans[DEFAULT_SIZE] = {};
+
+    // printf("\nleft: %p, right: %p, data: %s\n", node->left, node->right, node->data);
+
+
+    if(node->left == nullptr && node->right == nullptr){
+        char condition[DEFAULT_SIZE] = {};
+
+        printf("Ваш персонаж – %s ?\n", node->data);
+        scanf("%s", ans);
+
+        if(!strcmp(ans, "да") || !strcmp(ans, "Да")){
+            printf("Отгадал)!\n");
+        }else{
+            printf("Не отгадал( Кто это был?\n");
+
+            scanf("%s", ans);
+            printf("\nХорошо, а чем %s отличается от %s ?\n", ans, node->data);
+            scanf("%s", condition);
+
+            node->right = OpNew(node->data, logfile);
+            node->left = OpNew(ans, logfile);
+            strcpy(node->data, condition);
+
+            FILE* databasefile = fopen("akinator_database.txt", "w");
+
+            // TreePartialTextDump(root->tree_root, 0, databasefile, logfile);
+            PrintNode(root->tree_root->right, databasefile);
+
+            fclose(databasefile);
+        }
+    }else{
+        printf("\nВаш персонаж – %s ?\n", node->data);
+
+        scanf("%s", ans);
+
+        if(!strcmp("Да", ans) || !strcmp("да", ans)){
+            AkinatorGuessing(root, node->left, logfile);
+        }
+        if(!strcmp("Нет", ans) || !strcmp("нет", ans)){
+            AkinatorGuessing(root, node->right, logfile);
+        }
+    }
+
+    return 0;
+}

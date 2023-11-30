@@ -13,3 +13,5 @@ all:
 	./akinator
 dot:
 	dot my_dotcode.dot -Tpng -O
+launch:
+	./akinator

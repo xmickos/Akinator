@@ -58,7 +58,7 @@ int RootCtor(Root* root, FILE* logfile);
 
 int OpInsertSort(Root* root, Elem_t value, FILE* logfile);
 
-int TreePartialTextDump(Node* node, size_t indent, FILE* logfile);
+int TreePartialTextDump(Node* node, size_t indent, FILE* dstfile, FILE* logfile);
 
 int OpPartialGraphDump(Node* node, unsigned char ip, unsigned char depth, FILE* dotfile, FILE* logfile);
 
@@ -71,3 +71,5 @@ void PrintNode(const Node* node, FILE* logfile);
 int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile);
 
 Node* PartialTreeRead(char* buff, int* pos, FILE* logfile);
+
+int AkinatorGuessing(Root* root, Node* node, FILE* logfile);
