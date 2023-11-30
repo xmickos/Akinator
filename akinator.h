@@ -6,15 +6,15 @@
 #include <unistd.h>
 #include <string.h>
 
-typedef int Elem_t;
+typedef char* Elem_t;
 
 typedef unsigned char Ip_type;
 
-#define DEFAULT_SIZE 16
+#define DEFAULT_SIZE 4 * 16
 #define DEFAULT_DATA_VALUE 10
 
 
-#define VERIFICATION_LOGFILE(logfile) {}
+#define VERIFICATION_LOGFILE(logfile, retval) if(logfile == nullptr){ printf("\033[1;31mError\033[0m: logfile is nullptr!\nExiting...\n"); return retval;}
 
 #define ECHO(logfile) fprintf(logfile, "[%s, %d]\n", __FUNCTION__, __LINE__);                                          \
     printf("[%s, %d]\n", __FUNCTION__, __LINE__);
@@ -24,7 +24,7 @@ typedef unsigned char Ip_type;
         return ret_val;                                                                                                \
     }
 
-#define ERROR_MSG(msg) {}
+#define ERROR_MSG(msg) printf("\033[1;31mError\033[0m: " msg)
 
 #define GRAPHVIZ_INIT "digraph g {\nfontname=\"Helvetica,Arial,sans-serif\"\n\
 node [fontname=\"Helvetica,Arial,sans-serif\"]\n\
@@ -41,7 +41,7 @@ edge [ ];\n\n"
 
 struct Node{
     Node* left  = nullptr;
-    Elem_t data = 0;
+    Elem_t data = nullptr;
     Node* right = nullptr;
     Ip_type ip = 0;
     unsigned char subnet_mask = 0;

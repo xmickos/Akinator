@@ -1,57 +1,66 @@
-	data: 10
+[OpNew, 11]
+Created node with data:  Hello!
+[OpNew, 11]
+Created node with data:  sample text :/
+[OpNew, 11]
+Created node with data:  Hola!
+[OpNew, 11]
+Created node with data:  Privet!
+	data: Unauthorized access to this device is prohibited!
 	left:	
-		data: 0
+		data: Hello!
 		left:	
-			data: 11
+			data: sample text :/
 			left:	
 			right:	
 		right:	
 	right:	
-		data: 0
+		data: Hola!
 		left:	
 		right:	
-			data: 14
+			data: Privet!
 			left:	
 			right:	
-(10(0(11nilnil)nil)(0nil(14nilnil)))[OpNew, 11]
-Created node with val = 0
+("Unauthorized access to this device is prohibited!"("Hello!"("sample text :/"nilnil)nil)("Hola!"nil("Privet!"nilnil)))
 [OpNew, 11]
-Created node with val = 0
+Created node with data:  
 [OpNew, 11]
-Created node with val = 0
+Created node with data:  
 [OpNew, 11]
-Created node with val = 0
+Created node with data:  
 [OpNew, 11]
-Created node with val = 0
+Created node with data:  
+[OpNew, 11]
+Created node with data:  
 
 a
-	data: 10
+	data: Unauthorized access to this device is prohibited!
 	left:	
-		data: 0
+		data: Hello!
 		left:	
-			data: 11
+			data: sample text :/
 			left:	
 			right:	
 		right:	
-			data: 10
+			data: Unauthorized access to this device is prohibited!
 			left:	
-				data: 0
+				data: Hello!
 				left:	
-					data: 11
+					data: sample text :/
 					left:	
 					right:	
 				right:	
 			right:	
-				data: 0
+				data: Hola!
 				left:	
 				right:	
-					data: 14
+					data: Privet!
 					left:	
 					right:	
 	right:	
-		data: 0
+		data: Hola!
 		left:	
 		right:	
-			data: 14
+			data: Privet!
 			left:	
 			right:	

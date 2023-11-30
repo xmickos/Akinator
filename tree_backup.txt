@@ -1,1 +1,1 @@
-(10(0(11nilnil)nil)(0nil(14nilnil)))
+("Unauthorized access to this device is prohibited!"("Hello!"("sample text :/"nilnil)nil)("Hola!"nil("Privet!"nilnil)))

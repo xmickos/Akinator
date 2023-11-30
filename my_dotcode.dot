@@ -20,28 +20,113 @@ edge [ ];
 ];
 
 "0/1"[
-	label = "<f0> data: 0| {<f1> Left| <f2> Right} | <f3> 0/1"
+	label = "<f0> data: Hello!| {<f1> Left| <f2> Right} | <f3> 0/1"
 	shape = "record"
 ];
 
 "0/0":f1 -> "0/1":f0
 
 "128/1"[
-	label = "<f0> data: 0| {<f1> Left| <f2> Right} | <f3> 128/1"
+	label = "<f0> data: Hola!| {<f1> Left| <f2> Right} | <f3> 128/1"
 	shape = "record"
 ];
 
 "0/0":f2 -> "128/1":f0
 
 "0/2"[
-	label = "<f0> data: 11| {<f1> Left| <f2> Right} | <f3> 0/2"
+	label = "<f0> data: sample text :/| {<f1> Left| <f2> Right} | <f3> 0/2"
 	shape = "record"
 ];
 
 "0/1":f1 -> "0/2":f0
 
 "192/2"[
-	label = "<f0> data: 14| {<f1> Left| <f2> Right} | <f3> 192/2"
+	label = "<f0> data: Privet!| {<f1> Left| <f2> Right} | <f3> 192/2"
+	shape = "record"
+];
+
+"128/1":f2 -> "192/2":f0
+
+}
+digraph g {
+fontname="Helvetica,Arial,sans-serif"
+node [fontname="Helvetica,Arial,sans-serif"]
+edge [fontname="Helvetica,Arial,sans-serif"]
+
+graph [
+	rankdir = "LR"
+];
+
+node [
+	fontsize = "16"
+	shape = "ellipse"
+];
+
+edge [ ];
+
+"0/0"[
+	label = "<f0> data: 0| {<f1> Left| <f2> Right} | <f3> 0/0"
+	shape = "record"
+];
+
+"0/1"[
+	label = "<f0> data: Hello!| {<f1> Left| <f2> Right} | <f3> 0/1"
+	shape = "record"
+];
+
+"0/0":f1 -> "0/1":f0
+
+"128/1"[
+	label = "<f0> data: Hola!| {<f1> Left| <f2> Right} | <f3> 128/1"
+	shape = "record"
+];
+
+"0/0":f2 -> "128/1":f0
+
+"0/2"[
+	label = "<f0> data: sample text :/| {<f1> Left| <f2> Right} | <f3> 0/2"
+	shape = "record"
+];
+
+"0/1":f1 -> "0/2":f0
+
+"64/2"[
+	label = "<f0> data: Unauthorized access to this device is prohibited!| {<f1> Left| <f2> Right} | <f3> 64/2"
+	shape = "record"
+];
+
+"0/1":f2 -> "64/2":f0
+
+"64/3"[
+	label = "<f0> data: Hello!| {<f1> Left| <f2> Right} | <f3> 64/3"
+	shape = "record"
+];
+
+"64/2":f1 -> "64/3":f0
+
+"96/3"[
+	label = "<f0> data: Hola!| {<f1> Left| <f2> Right} | <f3> 96/3"
+	shape = "record"
+];
+
+"64/2":f2 -> "96/3":f0
+
+"64/4"[
+	label = "<f0> data: sample text :/| {<f1> Left| <f2> Right} | <f3> 64/4"
+	shape = "record"
+];
+
+"64/3":f1 -> "64/4":f0
+
+"112/4"[
+	label = "<f0> data: Privet!| {<f1> Left| <f2> Right} | <f3> 112/4"
+	shape = "record"
+];
+
+"96/3":f2 -> "112/4":f0
+
+"192/2"[
+	label = "<f0> data: Privet!| {<f1> Left| <f2> Right} | <f3> 192/2"
 	shape = "record"
 ];
 
