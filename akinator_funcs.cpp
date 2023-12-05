@@ -2,13 +2,7 @@
 
 
 Node* OpNew(Elem_t value, FILE* logfile){
-
-    // Можно объявлять Node node = {}; прямо здесь и возвращать через return ?
-    // Ответ: можно, если возвращать не указатель на node, а сам node - тогда вернётся не указатель на
-    // уже затёртый адрес, а копия всей структуры.
-
     VERIFICATION_LOGFILE(logfile, nullptr);
-    // ECHO(logfile);
 
     Node* node = (Node*)calloc(1, sizeof(Node));
     node->data = (char*)calloc(DEFAULT_SIZE, sizeof(char));
@@ -61,7 +55,6 @@ int RootCtor(Root* root, FILE* logfile){
 
     VERIFICATION_LOGFILE(logfile, -1);
     VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1);
-    // TODO: pass &root as an argument
     root->size = 1;
     root->tree_root = (Node*)calloc(1, sizeof(Node));
     if(root->tree_root == nullptr){
@@ -70,43 +63,12 @@ int RootCtor(Root* root, FILE* logfile){
     }
 
     root->tree_root->data  = (char*)calloc(4 * DEFAULT_SIZE, sizeof(char));
-    // strcpy(root->tree_root->data, "Unauthorized access to this device is prohibited!");
     strcpy(root->tree_root->data, "Неизвестно кто");
     root->tree_root->left  = nullptr;
     root->tree_root->right = nullptr;
 
     return 0;
 }
-
-/*
-int OpInsertSort(Root* root, Elem_t value, FILE* logfile){
-
-    VERIFICATION_LOGFILE(logfile, -1);
-    ECHO(logfile);
-    VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1);
-
-    Node* curr = root->tree_root;
-
-    while(1){
-        if(value <= curr->data){
-            if(curr->left == nullptr){
-                curr->left = OpNew(value, logfile);
-                break;
-            }
-            curr = curr->left;
-        }else{
-            if(curr->right == nullptr){
-                curr->right = OpNew(value, logfile);
-                break;
-            }
-            curr = curr->right;
-        }
-
-    }
-
-    return 0;
-}
-*/
 
 int TreePartialTextDump(Node* node, size_t indent, FILE* dstfile, FILE* logfile){
     VERIFICATION_LOGFILE(logfile, -1);
@@ -220,6 +182,7 @@ void PrintNode(const Node* node, FILE* logfile){
 }
 
 int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile){
+    ECHO(logfile);
     // Пока функция "приклеивает" прочитанное дерево только в правое поддерево данной ноды, можно переписать в дальнейшем.
 
     VERIFICATION_LOGFILE(logfile, -1);
@@ -231,7 +194,7 @@ int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile){
     int pos = 0;
 
     stat("akinator_database.txt", &filestat);
-    filesize = filestat.st_size;
+    filesize = (size_t)filestat.st_size;
 
     char* buff = (char*)calloc(filesize + 1, sizeof(char));
     VERIFICATION(buff == nullptr, "Bad calloc!", logfile, -1);
@@ -245,10 +208,10 @@ int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile){
         buff[filesize] = '\0';
     }
 
-    // printf("size = %lld\n", filestat.st_size);
     printf("buff: %s\n", buff);
 
     init_node->right = PartialTreeRead(buff, &pos, logfile);
+    VERIFICATION(init_node->right == nullptr, "Failed to read subtree!", logfile, -1);
 
     printf("output: %p,\nBye:)\n", init_node->right);
 
@@ -261,44 +224,32 @@ Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
     VERIFICATION(pos == nullptr, "Lost pos address!", logfile, nullptr);
 
     int offset = 0;
-    char command_buff[DEFAULT_SIZE] = {}, node_val[DEFAULT_SIZE] = {};
-
-    // printf("Another level...\n");
+    char command_buff[DEFAULT_SIZE] = {};
 
     if(buff[*pos] != '('){
         printf("Bad syntax. Remaining buff: %s\n", buff + *pos);
         return nullptr;
     }else{
         (*pos)++;
-        // printf("Increasing pos...\nbuff: %s\n", buff + *pos);
     }
 
-    Node* node = OpNew("\0", logfile);
+    Node* node = OpNew("", logfile);
 
     while(buff[*pos + 1] != '"'){
         (*pos)++;
-        node_val[offset++] = buff[*pos];
+        node->data[offset++] = buff[*pos];
     }
 
-    node_val[offset + 1] = '\0';
+    node->data[offset + 1] = '\0';
 
-    // printf("Value! :3 \"%s\"!\n", node_val);
-    strcpy(node->data, node_val);
     *pos += 2; // +2 for remaining ' " ' and last symbol in prev string.
-    // printf("New pos is %d\n", *pos);
 
     if(buff[*pos] == '('){
-        // printf("Going deeper left...\n");
         node->left = PartialTreeRead(buff, pos, logfile);
     }else{
 
-
-     // ("Unauthorized access to this device is prohibited!"("Hello!"("sample text :/"nilnil)nil)("Hola!"nil("Privet!"nilnil)))
-
-
         sscanf(buff + *pos, "%3s", command_buff);
         if(!strcmp(command_buff, "nil")){
-            // printf("Found nil!\n");
             node->left = nullptr;
             *pos += 3;
         }else{
@@ -306,14 +257,12 @@ Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
             node->left = PartialTreeRead(buff, pos, logfile);
             }
         }
-
     }
 
     sscanf(buff + *pos, "%3s", command_buff);
     if(!strcmp(command_buff, "nil")){
         node->right = nullptr;
         *pos += 3;
-        // printf("Found nil!\nleft buff: %s\n\n", buff + *pos);
     }else{
         if(buff[*pos] == '('){
         node->right = PartialTreeRead(buff, pos, logfile);
@@ -322,7 +271,6 @@ Node* PartialTreeRead(char* buff, int* pos, FILE* logfile){
 
     if(buff[*pos] == ')'){
         (*pos)++;
-        // printf("Foud closing bracket!\nleft buff: %s\n", buff + *pos);
         return node;
     }
 
@@ -338,45 +286,182 @@ int AkinatorGuessing(Root* root, Node* node, FILE* logfile){
 
     char ans[DEFAULT_SIZE] = {};
 
-    // printf("\nleft: %p, right: %p, data: %s\n", node->left, node->right, node->data);
-
-
     if(node->left == nullptr && node->right == nullptr){
-        char condition[DEFAULT_SIZE] = {};
 
         printf("Ваш персонаж – %s ?\n", node->data);
         scanf("%s", ans);
+        while(!getchar());
 
         if(!strcmp(ans, "да") || !strcmp(ans, "Да")){
             printf("Отгадал)!\n");
         }else{
-            printf("Не отгадал( Кто это был?\n");
+            unsigned char depth = 0;
 
-            scanf("%s", ans);
-            printf("\nХорошо, а чем %s отличается от %s ?\n", ans, node->data);
-            scanf("%s", condition);
+            for(unsigned char x = 0; x < CHAR_BIT; x++){
+                if(node->subnet_mask & (1u << x)){
+                    depth = x;
+                }
+            }
 
             node->right = OpNew(node->data, logfile);
+            unsigned char new_ip = node->ip | (unsigned char)(1 << (CHAR_BIT - depth - 1));
+            node->right->ip = new_ip;
+
+            unsigned char new_subnet_mask = ~((1u << (CHAR_BIT - depth)) - 1u);
+            node->right->subnet_mask = new_subnet_mask;
+
+            printf("Не отгадал( Кто это был?\n");
+            scanf("%[^\n]", ans);
+            while(!getchar());
+
+            printf("\nХорошо, а чем %s отличается от %s ?\n", ans, node->data);
+            scanf("%[^\n]", node->data);
+            while(!getchar());
+
             node->left = OpNew(ans, logfile);
-            strcpy(node->data, condition);
+            node->left->ip = node->ip;
+            node->left->subnet_mask = new_subnet_mask;
 
             FILE* databasefile = fopen("akinator_database.txt", "w");
 
-            // TreePartialTextDump(root->tree_root, 0, databasefile, logfile);
             PrintNode(root->tree_root->right, databasefile);
 
             fclose(databasefile);
         }
     }else{
         printf("\nВаш персонаж – %s ?\n", node->data);
+        bool convergence = false;
 
         scanf("%s", ans);
 
         if(!strcmp("Да", ans) || !strcmp("да", ans)){
             AkinatorGuessing(root, node->left, logfile);
+            convergence = true;
         }
         if(!strcmp("Нет", ans) || !strcmp("нет", ans)){
             AkinatorGuessing(root, node->right, logfile);
+            convergence = true;
+        }
+
+        if(!convergence){
+            printf("Прости, я не понял твоего ответа.\n");
+        }
+    }
+
+    return 0;
+}
+
+int IpAssignment(Root* root, int initial_depth, FILE* logfile){     // Присваивание адресов определяется след. образом: шаг по
+    ECHO(logfile);                                                  // дереву влево обозначается нулевым битом, шаг вправо -
+    VERIFICATION_LOGFILE(logfile, -1);                              // битом, выставленным в 1. То есть, пойти влево = 0, пойти
+    VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1); // вправо = 1, по аналогии с расположением чисел 0 и 1
+    VERIFICATION(root->tree_root == nullptr, "Input tree root is nullptr!", logfile, -1); // на числовой прямой слева-направо.
+
+    SetMyIp(root->tree_root, initial_depth, logfile);
+
+    return 0;
+}
+
+int SetMyIp(Node* node, int depth, FILE* logfile){
+    // ECHO(logfile);
+    VERIFICATION(node == nullptr, "Input node is nullptr", logfile, -1);
+
+    unsigned char new_ip = node->ip | (unsigned char)(1 << (CHAR_BIT - depth - 1));
+    unsigned char new_subnet_mask = ~((1 << (CHAR_BIT - depth)) - 1);
+
+    if(depth == 1){
+        node->ip = 0;
+        node->subnet_mask = 1;
+    }
+
+    if(node->left != nullptr){
+        node->left->ip = node->ip;
+        node->left->subnet_mask = new_subnet_mask;
+
+        // unsigned char debug_depth = ~(node->left->subnet_mask) + 1;     // надо доделать...
+
+        // fprintf(logfile, "init_debug_depth: %d\n", debug_depth);
+        // int k = 0;
+        // while((debug_depth & 0b00000001) != 1 && depth != 0){ debug_depth = debug_depth >> 1; k++;}
+        // fprintf(logfile, "Ip was set for:\n\t%s\t%d/%d\n\n", node->left->data, node->left->ip, k);
+
+        SetMyIp(node->left, depth + 1, logfile);
+    }
+
+    if(node->right != nullptr){
+        node->right->ip = new_ip;
+        node->right->subnet_mask = new_subnet_mask;
+
+
+        // unsigned char debug_depth = ~(node->right->subnet_mask) + 1;
+        // fprintf(logfile, "init_debug_depth: %d, depth: %d\n", debug_depth, depth);
+        // int k = 0;
+        // while((debug_depth & 0b00000001) != 1 && depth != 0){ debug_depth = debug_depth >> 1; k++;}
+        // fprintf(logfile, "Ip's were set for:\n\t%s\t%d/%d\n\n", node->right->data, node->right->ip, k);
+
+        SetMyIp(node->right, depth + 1, logfile);
+    }
+
+    return 0;
+}
+
+int AkinatorDefinition(Root* root, Node* node, char* ans, FILE* logfile){
+    VERIFICATION_LOGFILE(logfile, -1);
+    VERIFICATION(node == nullptr, "Input node is nullptr!", logfile, -1);
+    VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1);
+    VERIFICATION(ans == nullptr, "Input ans is nullptr!", logfile, -1);
+
+    if(!strcmp(ans, "Неизвестно кто")) {
+        printf("Это неизвестно кто.\n");
+        return 0;
+    }
+
+    unsigned char masked_ip = 0;
+    OpSearch(node, ans, &masked_ip);
+    printf("masked_ip == %d\n", masked_ip);
+    if(masked_ip == 0){
+        printf("Увы, такого персонажа не нашлось...\n");
+        fprintf(logfile, "Увы, такого персонажа не нашлось...\n");
+        return -1;
+    }
+
+    unsigned char subnet_bit = 128;
+    printf("Персонаж %s запомнился мне тем, что он(а): ", ans);
+    node = root->tree_root->right;
+    // printf("tree_root is %p\n%d %d\n", node, node->left, node->right);
+    while(!(node->left == nullptr && node->right == nullptr)){
+        if(node->ip & subnet_bit){
+            printf("не ");
+            printf("%s", node->data);
+            node = node->right;
+            printf(", ");
+        }else{
+            printf("%s", node->data);
+            node = node->left;
+            printf(", ");
+        }
+
+        subnet_bit = subnet_bit >> 1;
+    }
+
+    return 0;
+}
+
+unsigned char OpSearch(Node* node, char* correct, unsigned char* ans){
+    VERIFICATION(ans == nullptr, "ans is nullptr!", stdout, 1);
+    // fprintf(stdout, "[OpSearch]: %s <=> %d\n", node->data, node->ip & node->subnet_mask);
+    if(!strcmp(node->data, correct)){
+        // printf("ip персонажа: %d, node->data: %s, subnet_mask: %d, a & b = %d\n",
+        // node->ip, node->data, node->subnet_mask, node->ip & node->subnet_mask);
+        *ans = node->ip & node->subnet_mask;
+        return 0;                                // В такой реализации определение можно дать
+    }                                                                       // только листу, но не узлу. Тк определение в
+    else{                                                                   // исходной задаче нужно было дать персонажу,
+        if(node->left != nullptr){                                          // решено было остановиться на этом. Определение
+            OpSearch(node->left, correct, ans);                                      // для узла "Неизвестно кто" обрабатывается отдельно.
+        }
+        if(node->right != nullptr){
+            OpSearch(node->right, correct, ans);
         }
     }
 

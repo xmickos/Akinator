@@ -29,11 +29,11 @@ typedef unsigned char Ip_type;
 #define GRAPHVIZ_INIT "digraph g {\nfontname=\"Helvetica,Arial,sans-serif\"\n\
 node [fontname=\"Helvetica,Arial,sans-serif\"]\n\
 edge [fontname=\"Helvetica,Arial,sans-serif\"]\n\
-\ngraph [\n\trankdir = \"LR\"\n];\n\n\
+\ngraph [\n\t\n];\n\n\
 node [\n\tfontsize = \"16\"\n\tshape = \"ellipse\"\n];\n\n\
 edge [ ];\n\n"
 
-#define GRAPHVIZ_MKNODE(name, data) #name "[\n\tlabel = \"<f0> data: " data "| {<f1> Left| <f2> Right} | <f3> " name "\"\n\tshape = \"record\"\n];\n\n"
+#define GRAPHVIZ_MKNODE(name, data) #name "[\n\tlabel = \"{<f0> data: " data "| {<f1> 'Да'| <f2> 'Нет'} | <f3> " name "}\"\n\tshape = \"record\"\n];\n\n"
 
 #define GRAPHVIZ_CONNECT_NODE(first_id, first_domain, second_id, second_domain) first_id ":" #first_domain " -> " second_id ":" #second_domain "\n\n"
 
@@ -73,3 +73,11 @@ int ReadTree(FILE* backupfile, Node* init_node, FILE* logfile);
 Node* PartialTreeRead(char* buff, int* pos, FILE* logfile);
 
 int AkinatorGuessing(Root* root, Node* node, FILE* logfile);
+
+int AkinatorDefinition(Root* root, Node* node, char* ans, FILE* logfile);
+
+unsigned char OpSearch(Node* node, char* correct, unsigned char* ans);
+
+int IpAssignment(Root* root, int initial_depth, FILE* logfile);
+
+int SetMyIp(Node* node, int depth, FILE* logfile);
