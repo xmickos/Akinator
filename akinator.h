@@ -47,6 +47,11 @@ struct Node{
     unsigned char subnet_mask = 0;
 };
 
+struct IpAddress{
+    Ip_type ip = 0;
+    unsigned char subnet_mask = 0;
+};
+
 struct Root{
     size_t size = 0;
     Node* tree_root = nullptr;
@@ -76,8 +81,10 @@ int AkinatorGuessing(Root* root, Node* node, FILE* logfile);
 
 int AkinatorDefinition(Root* root, Node* node, char* ans, FILE* logfile);
 
-unsigned char OpSearch(Node* node, char* correct, unsigned char* ans);
+unsigned char OpSearch(Node* node, char* correct, Node* ans);
 
 int IpAssignment(Root* root, int initial_depth, FILE* logfile);
 
 int SetMyIp(Node* node, int depth, FILE* logfile);
+
+int AkinatorComparing(Root* root, char* first_object, char* second_object, FILE* logfile);

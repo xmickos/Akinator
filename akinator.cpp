@@ -19,7 +19,8 @@ int main(){
 
     char mode_ans[DEFAULT_SIZE] = {};
 
-    printf("Выберите один из трёх режимов работы программы: \"Akinator\"[0], \"Definition\"[1]\n");
+    printf("Выберите один из трёх режимов работы программы: \"Akinator\"[0],"
+    ", \"Definition\"[1], \"Comparation\"[2]\n");
     scanf("%[^\n]", mode_ans);
     printf("mode_ans:%s\n", mode_ans);
 
@@ -31,18 +32,26 @@ int main(){
     }
     fclose(databasefile);
 
-    IpAssignment(&root, 1, logfile);
+    IpAssignment(&root, 0, logfile);
 
     printf("mode_ans: %s\n", mode_ans);
 
-    if(mode_ans[0] - '0'){
-        printf("Определение кому из персонажей Вы хотели бы дать?\n");
-        while(!getchar());
-        scanf("%[^\n]", mode_ans);
-        while(!getchar());
-        AkinatorDefinition(&root, root.tree_root, mode_ans, logfile);
-    }else{
-        AkinatorGuessing(&root, root.tree_root, logfile);
+    switch(mode_ans[0] - '0'){
+        case 0:
+            AkinatorGuessing(&root, root.tree_root, logfile);
+            break;
+        case 1:
+            printf("Определение кому из персонажей Вы хотели бы дать?\n");
+            while(!getchar());
+            scanf("%[^\n]", mode_ans);
+            while(!getchar());
+            AkinatorDefinition(&root, root.tree_root, mode_ans, logfile);
+            break;
+        case 2:
+            break;
+        default:
+            printf("Выбран некорректный режим.\n");
+            return 0;
     }
 
     OpGraphDump(&root, dotfile, logfile);

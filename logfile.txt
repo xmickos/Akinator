@@ -32,6 +32,182 @@ Created node with data:
 Created node with data:  
 Created node with data:  
 Created node with data:  
+Created node with data:  
+Created node with data:  
 [IpAssignment, 355]
-Created node with data:  фыва
-Created node with data:  фыва)
+[SetMyIp, 366]
+init_debug_depth: 8
+Ip was set for:
+	волшебник	128/8, depth = 0
+
+[SetMyIp, 366]
+init_debug_depth: 6
+Ip was set for:
+	Плохой	128/6, depth = 1
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	Рыжий	128/5, depth = 2
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	Рон	128/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	нет	128/3, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	Рон	136/5, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	а бля бубубу)	144/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	нет	144/3, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	Малфой	152/5, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	Проглоттер	160/3, depth = 2
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	Гарри	160/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	ГарриПоттер	176/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	нет	176/3, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	ава ва вав)))	184/5, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 2
+Ip was set for:
+	нет	184/2, depth = 5
+
+[SetMyIp, 366]
+init_debug_depth: 6
+Ip was set for:
+	ГарриПоттер	188/6, depth = 5
+
+[SetMyIp, 366]
+init_debug_depth: 2
+Ip was set for:
+	БотаетОбщесос	192/2, depth = 1
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	фыва	192/5, depth = 2
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	)	192/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	фыва)	192/3, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	фыва	200/5, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	 бебебес	208/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	бабабас	208/3, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	бара бара бара бэрэ бэрэ бэрэ)	216/5, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 2
+Ip was set for:
+	бюбюбю бябябя)	216/2, depth = 5
+
+[SetMyIp, 366]
+init_debug_depth: 6
+Ip was set for:
+	НинаКуклина	220/6, depth = 5
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	РыбаЕбучаяОкуньБлять	224/3, depth = 2
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	Гуф	224/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 4
+Ip was set for:
+	 шешеше	240/4, depth = 3
+
+[SetMyIp, 366]
+init_debug_depth: 3
+Ip was set for:
+	шашаша	240/3, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 5
+Ip was set for:
+	 Смитт	248/5, depth = 4
+
+[SetMyIp, 366]
+init_debug_depth: 2
+Ip was set for:
+	Агент	248/2, depth = 5
+
+[SetMyIp, 366]
+init_debug_depth: 6
+Ip was set for:
+	е	252/6, depth = 5
+
+[SetMyIp, 366]
+init_debug_depth: 1
+Ip was set for:
+	нет	252/1, depth = 6
+
+[SetMyIp, 366]
+init_debug_depth: 7
+Ip was set for:
+	е	254/7, depth = 6
+
+[SetMyIp, 366]

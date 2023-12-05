@@ -363,13 +363,13 @@ int IpAssignment(Root* root, int initial_depth, FILE* logfile){     // Прис�
 }
 
 int SetMyIp(Node* node, int depth, FILE* logfile){
-    // ECHO(logfile);
+    ECHO(logfile);
     VERIFICATION(node == nullptr, "Input node is nullptr", logfile, -1);
 
     unsigned char new_ip = node->ip | (unsigned char)(1 << (CHAR_BIT - depth - 1));
-    unsigned char new_subnet_mask = ~((1 << (CHAR_BIT - depth)) - 1);
+    unsigned char new_subnet_mask = ~((1 << (CHAR_BIT - depth - 1)) - 1);
 
-    if(depth == 1){
+    if(depth == 0){
         node->ip = 0;
         node->subnet_mask = 1;
     }
@@ -378,26 +378,12 @@ int SetMyIp(Node* node, int depth, FILE* logfile){
         node->left->ip = node->ip;
         node->left->subnet_mask = new_subnet_mask;
 
-        // unsigned char debug_depth = ~(node->left->subnet_mask) + 1;     // надо доделать...
-
-        // fprintf(logfile, "init_debug_depth: %d\n", debug_depth);
-        // int k = 0;
-        // while((debug_depth & 0b00000001) != 1 && depth != 0){ debug_depth = debug_depth >> 1; k++;}
-        // fprintf(logfile, "Ip was set for:\n\t%s\t%d/%d\n\n", node->left->data, node->left->ip, k);
-
         SetMyIp(node->left, depth + 1, logfile);
     }
 
     if(node->right != nullptr){
         node->right->ip = new_ip;
         node->right->subnet_mask = new_subnet_mask;
-
-
-        // unsigned char debug_depth = ~(node->right->subnet_mask) + 1;
-        // fprintf(logfile, "init_debug_depth: %d, depth: %d\n", debug_depth, depth);
-        // int k = 0;
-        // while((debug_depth & 0b00000001) != 1 && depth != 0){ debug_depth = debug_depth >> 1; k++;}
-        // fprintf(logfile, "Ip's were set for:\n\t%s\t%d/%d\n\n", node->right->data, node->right->ip, k);
 
         SetMyIp(node->right, depth + 1, logfile);
     }
@@ -417,20 +403,23 @@ int AkinatorDefinition(Root* root, Node* node, char* ans, FILE* logfile){
     }
 
     unsigned char masked_ip = 0;
-    OpSearch(node, ans, &masked_ip);
-    printf("masked_ip == %d\n", masked_ip);
+    Node finded_node = {};
+    OpSearch(node, ans, &finded_node);
+    masked_ip = finded_node.ip & finded_node.subnet_mask;
+
     if(masked_ip == 0){
         printf("Увы, такого персонажа не нашлось...\n");
         fprintf(logfile, "Увы, такого персонажа не нашлось...\n");
         return -1;
     }
 
-    unsigned char subnet_bit = 128;
+    unsigned char subnet_bit = 64;
     printf("Персонаж %s запомнился мне тем, что он(а): ", ans);
     node = root->tree_root->right;
-    // printf("tree_root is %p\n%d %d\n", node, node->left, node->right);
+
     while(!(node->left == nullptr && node->right == nullptr)){
-        if(node->ip & subnet_bit){
+
+        if(masked_ip & subnet_bit){
             printf("не ");
             printf("%s", node->data);
             node = node->right;
@@ -444,21 +433,50 @@ int AkinatorDefinition(Root* root, Node* node, char* ans, FILE* logfile){
         subnet_bit = subnet_bit >> 1;
     }
 
+    printf("на этом всё.\n");
+
     return 0;
 }
 
-unsigned char OpSearch(Node* node, char* correct, unsigned char* ans){
+int AkinatorComparing(Root* root, char* first_object, char* second_object, FILE* logfile){
+    VERIFICATION_LOGFILE(logfile, -1);
+    VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1);
+    VERIFICATION(first_object == nullptr, "Input first_object is nullptr!", logfile, -1);
+    VERIFICATION(second_object == nullptr, "Input second_object is nullptr!", logfile, -1);
+
+    unsigned char first_obj_ip = 0, second_obj_ip = 0;
+    Node first_finded_node = {}, second_finded_node = {};
+    OpSearch(root->tree_root->right, first_object, &first_finded_node);
+    OpSearch(root->tree_root->right, second_object, &second_finded_node);
+
+    if(first_obj_ip == 0){
+        printf("Первый персонаж не найден в базе!\n");
+        return 0;
+    }
+    if(second_obj_ip == 0){
+        printf("Второй персонаж не найден в базе!\n");
+        return 0;
+    }
+
+    // for(int i = 0; i < CHAR_BIT; i++){
+    //     if("")
+    // }
+    return 0;
+}
+
+unsigned char OpSearch(Node* node, char* correct, Node* ans){
     VERIFICATION(ans == nullptr, "ans is nullptr!", stdout, 1);
-    // fprintf(stdout, "[OpSearch]: %s <=> %d\n", node->data, node->ip & node->subnet_mask);
+
     if(!strcmp(node->data, correct)){
-        // printf("ip персонажа: %d, node->data: %s, subnet_mask: %d, a & b = %d\n",
-        // node->ip, node->data, node->subnet_mask, node->ip & node->subnet_mask);
-        *ans = node->ip & node->subnet_mask;
-        return 0;                                // В такой реализации определение можно дать
-    }                                                                       // только листу, но не узлу. Тк определение в
-    else{                                                                   // исходной задаче нужно было дать персонажу,
-        if(node->left != nullptr){                                          // решено было остановиться на этом. Определение
-            OpSearch(node->left, correct, ans);                                      // для узла "Неизвестно кто" обрабатывается отдельно.
+        printf("ip персонажа: %d, node->data: %s, subnet_mask: %d, a & b = %d\n",
+        node->ip, node->data, node->subnet_mask, node->ip & node->subnet_mask);
+        ans->ip = node->ip;
+        ans->subnet_mask = node->subnet_mask;
+        return 0;                                       // В такой реализации определение можно дать
+    }                                                   // только листу, но не узлу. Тк определение в
+    else{                                               // исходной задаче нужно было дать персонажу,
+        if(node->left != nullptr){                      // решено было остановиться на этом. Определение
+            OpSearch(node->left, correct, ans);         // для узла "Неизвестно кто" обрабатывается отдельно.
         }
         if(node->right != nullptr){
             OpSearch(node->right, correct, ans);
