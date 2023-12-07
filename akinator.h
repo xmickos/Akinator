@@ -10,7 +10,7 @@ typedef char* Elem_t;
 
 typedef unsigned char Ip_type;
 
-#define DEFAULT_SIZE 4 * 16
+#define DEFAULT_SIZE 64
 #define DEFAULT_DATA_VALUE 10
 
 
@@ -38,6 +38,13 @@ edge [ ];\n\n"
 #define GRAPHVIZ_CONNECT_NODE(first_id, first_domain, second_id, second_domain) first_id ":" #first_domain " -> " second_id ":" #second_domain "\n\n"
 
 #define GRAPHVIZ_END "}\n"
+
+#define STRUCTURE_ASSIGNING(struct1, struct2)                                               \
+        strcpy(struct1->data, struct2->data);                                               \
+        struct1->ip = struct2->ip;                                                          \
+        struct1->left = struct2->left;                                                      \
+        struct1->right = struct2->right;                                                    \
+        struct1->subnet_mask = struct2->subnet_mask;                                        \
 
 struct Node{
     Node* left  = nullptr;
@@ -87,4 +94,4 @@ int IpAssignment(Root* root, int initial_depth, FILE* logfile);
 
 int SetMyIp(Node* node, int depth, FILE* logfile);
 
-int AkinatorComparing(Root* root, char* first_object, char* second_object, FILE* logfile);
+int AkinatorComparation(Root* root, char* first_object, char* second_object, FILE* logfile);

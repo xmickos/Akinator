@@ -307,7 +307,7 @@ int AkinatorGuessing(Root* root, Node* node, FILE* logfile){
             unsigned char new_ip = node->ip | (unsigned char)(1 << (CHAR_BIT - depth - 1));
             node->right->ip = new_ip;
 
-            unsigned char new_subnet_mask = ~((1u << (CHAR_BIT - depth)) - 1u);
+            unsigned char new_subnet_mask = ~((1 << (CHAR_BIT - depth)) - 1);
             node->right->subnet_mask = new_subnet_mask;
 
             printf("Не отгадал( Кто это был?\n");
@@ -363,7 +363,6 @@ int IpAssignment(Root* root, int initial_depth, FILE* logfile){     // Прис�
 }
 
 int SetMyIp(Node* node, int depth, FILE* logfile){
-    ECHO(logfile);
     VERIFICATION(node == nullptr, "Input node is nullptr", logfile, -1);
 
     unsigned char new_ip = node->ip | (unsigned char)(1 << (CHAR_BIT - depth - 1));
@@ -438,29 +437,80 @@ int AkinatorDefinition(Root* root, Node* node, char* ans, FILE* logfile){
     return 0;
 }
 
-int AkinatorComparing(Root* root, char* first_object, char* second_object, FILE* logfile){
+int AkinatorComparation(Root* root, char* first_object, char* second_object, FILE* logfile){
     VERIFICATION_LOGFILE(logfile, -1);
     VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1);
     VERIFICATION(first_object == nullptr, "Input first_object is nullptr!", logfile, -1);
     VERIFICATION(second_object == nullptr, "Input second_object is nullptr!", logfile, -1);
 
-    unsigned char first_obj_ip = 0, second_obj_ip = 0;
-    Node first_finded_node = {}, second_finded_node = {};
-    OpSearch(root->tree_root->right, first_object, &first_finded_node);
-    OpSearch(root->tree_root->right, second_object, &second_finded_node);
+    Node* short_ip_node = OpNew("", logfile);
+    Node* large_ip_node = OpNew("", logfile);
+    OpSearch(root->tree_root->right, first_object, short_ip_node);
+    OpSearch(root->tree_root->right, second_object, large_ip_node);
 
-    if(first_obj_ip == 0){
+    if(short_ip_node->ip == 0){
         printf("Первый персонаж не найден в базе!\n");
-        return 0;
+        return -1;
     }
-    if(second_obj_ip == 0){
+    if(large_ip_node->ip == 0){
         printf("Второй персонаж не найден в базе!\n");
+        return -1;
+    }
+
+    Node* tmp = OpNew("", logfile);
+    if(short_ip_node->subnet_mask > large_ip_node->subnet_mask){
+        STRUCTURE_ASSIGNING(tmp, short_ip_node);
+        STRUCTURE_ASSIGNING(short_ip_node, large_ip_node);
+        STRUCTURE_ASSIGNING(large_ip_node, tmp);
+    }
+
+    int similarity[CHAR_BIT] = {};
+    for(int i = 0; i < CHAR_BIT; i++) similarity[i] = -1;
+
+    int k = 0;
+    unsigned char short_masked_ip = (unsigned char)(short_ip_node->ip & short_ip_node->subnet_mask);
+    unsigned char large_masked_ip = (unsigned char)(large_ip_node->ip & large_ip_node->subnet_mask);
+
+    for(unsigned char i = 1 << (CHAR_BIT - 1);
+        i > 0 && (short_masked_ip & i) == (large_masked_ip & i);
+        i = i >> 1)
+    {
+        // цикл по битам кратчайшей из масок подсети, притом от старшего бита к младшему. Сделал бы меньше нагромождений,
+        // но у меня short_ip_node.subnet_mask это char, а не boolean массив, поэтому приходится вместо обращения по индексу
+        // заниматься этим.
+
+        similarity[k] = (short_masked_ip & i);
+        k++;
+    }
+
+    if(similarity[0] == -1){
+        printf("Эти два персонажа ничем не похожи.\n");
         return 0;
     }
 
-    // for(int i = 0; i < CHAR_BIT; i++){
-    //     if("")
-    // }
+    Node* node = root->tree_root;
+    printf("Итак, %s и %s похожи тем, что они оба(е): ", short_ip_node->data, large_ip_node->data);
+
+    for(int i = 0; i < CHAR_BIT; i++){
+        if(similarity[i] != -1){
+            if(similarity[i] != 0){
+                printf("не ");
+            }
+            printf("%s, ", node->data);
+        }else{
+            break;
+        }
+
+        if(short_masked_ip & (unsigned char)similarity[i]){
+            node = node->right;
+        }else{
+            node = node->left;
+        }
+
+    }
+
+    printf("на этом всё.\n");
+
     return 0;
 }
 
@@ -468,10 +518,7 @@ unsigned char OpSearch(Node* node, char* correct, Node* ans){
     VERIFICATION(ans == nullptr, "ans is nullptr!", stdout, 1);
 
     if(!strcmp(node->data, correct)){
-        printf("ip персонажа: %d, node->data: %s, subnet_mask: %d, a & b = %d\n",
-        node->ip, node->data, node->subnet_mask, node->ip & node->subnet_mask);
-        ans->ip = node->ip;
-        ans->subnet_mask = node->subnet_mask;
+        STRUCTURE_ASSIGNING(ans, node);
         return 0;                                       // В такой реализации определение можно дать
     }                                                   // только листу, но не узлу. Тк определение в
     else{                                               // исходной задаче нужно было дать персонажу,

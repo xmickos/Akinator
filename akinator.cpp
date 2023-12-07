@@ -36,6 +36,8 @@ int main(){
 
     printf("mode_ans: %s\n", mode_ans);
 
+    char first_obj[DEFAULT_SIZE] = {}, second_obj[DEFAULT_SIZE] = {};
+
     switch(mode_ans[0] - '0'){
         case 0:
             AkinatorGuessing(&root, root.tree_root, logfile);
@@ -48,6 +50,15 @@ int main(){
             AkinatorDefinition(&root, root.tree_root, mode_ans, logfile);
             break;
         case 2:
+            printf("Введите первого персонажа для сравнения:\n");
+            while(!getchar());
+            scanf("%[^\n]", first_obj);
+
+            printf("\nВведите второго персонажа для сравнения:\n");
+            while(!getchar());
+            scanf("%[^\n]", second_obj);
+
+            AkinatorComparation(&root, first_obj, second_obj, logfile);
             break;
         default:
             printf("Выбран некорректный режим.\n");
