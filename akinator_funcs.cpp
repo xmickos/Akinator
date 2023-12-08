@@ -285,15 +285,26 @@ int AkinatorGuessing(Root* root, Node* node, FILE* logfile){
     VERIFICATION(root == nullptr, "Input root is nullptr!", logfile, -1);
 
     char ans[DEFAULT_SIZE] = {};
+    #ifdef TALK
+    char phrase[4 * DEFAULT_SIZE] = {};
+    #endif
 
     if(node->left == nullptr && node->right == nullptr){
 
         printf("Ваш персонаж – %s ?\n", node->data);
+        #ifdef TALK
+        sprintf(phrase, "\"Ваш персонаж – %s ?\n\"", node->data);
+        OpSaySomething(phrase, logfile);
+        #endif
         scanf("%s", ans);
         while(!getchar());
 
         if(!strcmp(ans, "да") || !strcmp(ans, "Да")){
             printf("Отгадал)!\n");
+            #ifdef TALK
+                sprintf(phrase, "\"Отгадал)!\n\"");
+                OpSaySomething(phrase, logfile);
+            #endif
         }else{
             unsigned char depth = 0;
 
@@ -311,10 +322,20 @@ int AkinatorGuessing(Root* root, Node* node, FILE* logfile){
             node->right->subnet_mask = new_subnet_mask;
 
             printf("Не отгадал( Кто это был?\n");
+            #ifdef TALK
+            sprintf(phrase, "\"Не отгадал( Кто это был?\n\"");
+            OpSaySomething(phrase, logfile);
+            #endif
+
             scanf("%[^\n]", ans);
             while(!getchar());
 
             printf("\nХорошо, а чем %s отличается от %s ?\n", ans, node->data);
+            #ifdef TALK
+            sprintf(phrase, "\"\nХорошо, а чем %s отличается от %s ?\n\"", ans, node->data);
+            OpSaySomething(phrase, logfile);
+            #endif
+
             scanf("%[^\n]", node->data);
             while(!getchar());
 
@@ -330,6 +351,11 @@ int AkinatorGuessing(Root* root, Node* node, FILE* logfile){
         }
     }else{
         printf("\nВаш персонаж – %s ?\n", node->data);
+        #ifdef TALK
+        sprintf(phrase, "\"Ваш персонаж – %s ?\n\"", node->data);
+        OpSaySomething(phrase, logfile);
+        #endif
+
         bool convergence = false;
 
         scanf("%s", ans);
@@ -345,6 +371,10 @@ int AkinatorGuessing(Root* root, Node* node, FILE* logfile){
 
         if(!convergence){
             printf("Прости, я не понял твоего ответа.\n");
+            #ifdef TALK
+            sprintf(phrase, "\"Прости, я не понял твоего ответа.\n\"");
+            OpSaySomething(phrase, logfile);
+            #endif
         }
     }
 
@@ -529,6 +559,23 @@ unsigned char OpSearch(Node* node, char* correct, Node* ans){
             OpSearch(node->right, correct, ans);
         }
     }
+
+    return 0;
+}
+
+int OpSaySomething(char* str, FILE* logfile){
+    VERIFICATION_LOGFILE(logfile, -1);
+    VERIFICATION(str == nullptr, "Input str is nullptr!", logfile, -1);
+
+    char* text = (char*)calloc(4 * DEFAULT_SIZE, sizeof(char));
+    text[0] = 's';
+    text[1] = 'a';
+    text[2] = 'y';
+    text[3] = ' ';
+    text[4] = '\0';
+    text = strcat(text, str);
+
+    system(text);
 
     return 0;
 }

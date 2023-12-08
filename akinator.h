@@ -13,6 +13,8 @@ typedef unsigned char Ip_type;
 #define DEFAULT_SIZE 64
 #define DEFAULT_DATA_VALUE 10
 
+#define TALK
+
 
 #define VERIFICATION_LOGFILE(logfile, retval) if(logfile == nullptr){ printf("\033[1;31mError\033[0m: logfile is nullptr!\nExiting...\n"); return retval;}
 
@@ -95,3 +97,5 @@ int IpAssignment(Root* root, int initial_depth, FILE* logfile);
 int SetMyIp(Node* node, int depth, FILE* logfile);
 
 int AkinatorComparation(Root* root, char* first_object, char* second_object, FILE* logfile);
+
+int OpSaySomething(char* str, FILE* logfile);

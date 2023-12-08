@@ -34,7 +34,12 @@ Created node with data:
 Created node with data:  
 Created node with data:  
 Created node with data:  
-[IpAssignment, 355]
 Created node with data:  
 Created node with data:  
 Created node with data:  
+Created node with data:  
+Created node with data:  
+Created node with data:  
+[IpAssignment, 385]
+Created node with data:  Гарри
+Created node with data:  Барри
